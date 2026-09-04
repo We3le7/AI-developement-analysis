@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 发展趋势 · 2025-2026 最新趋势分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;900&family=Geist+Mono:wght@400&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Design Tokens (extracted from .ardot design) ============ */
+  :root {
+    --bg: #050010;            /* canvas */
+    --bg-panel: #0A0A12;      /* terminal / regulation box */
+    --bg-card: #0D0D16;       /* cards */
+    --border: #2D2D33;        /* card hairline */
+    --divider: #1C1C21;       /* row dividers */
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --teal: #11D080;
+    --purple: #A277FF;
+    --cyan: #16C8FF;
+    --red: #F23F43;
+    --yellow: #FFB454;
+    --font-cn: 'Sarasa Gothic SC', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font-num: 'Geist', 'Inter', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    font-family: var(--font-cn);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ Fixed 1440 canvas + proportional scaling ============ */
+  #scale-wrap { overflow: hidden; width: 100%; }
+  #page {
+    width: 1440px;
+    background: var(--bg);
+    transform-origin: top left;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    display: flex;
+    flex-direction: row;
+    gap: 64px;
+    padding: 96px 100px 72px 100px;
+    background: linear-gradient(to bottom, #140A24 0%, #050010 100%);
+    align-items: flex-start;
+  }
+  .hero-copy {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(162, 119, 255, 0.12);
+    border: 1px solid rgba(162, 119, 255, 0.35);
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+  .badge-text {
+    font-family: var(--font-num);
+    font-size: 12px;
+    color: var(--purple);
+    letter-spacing: 0.02em;
+  }
+  .hero h1 {
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 88px;
+    letter-spacing: -2px;
+    width: fit-content;
+  }
+  .hero h2 {
+    font-family: var(--font-num);
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--purple);
+    line-height: 84px;
+    letter-spacing: -4px;
+    width: fit-content;
+  }
+  .hero-sub {
+    font-size: 18px;
+    line-height: 30px;
+    color: var(--text-secondary);
+    max-width: 780px;
+  }
+  .cta-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: opacity .15s ease, background .15s ease;
+  }
+  .btn-primary { background: var(--teal); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-ghost { background: transparent; color: var(--text-primary); border-color: #3F3F46; }
+  .btn-ghost:hover { background: rgba(255,255,255,0.05); }
+
+  /* ============ Terminal ============ */
+  .terminal {
+    width: 520px;
+    flex-shrink: 0;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    align-self: center;
+  }
+  .term-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .term-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .term-dot.red { background: var(--red); }
+  .term-dot.yellow { background: var(--yellow); }
+  .term-dot.green { background: var(--teal); }
+  .term-filename {
+    font-family: var(--font-num);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: 4px;
+  }
+  .term-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 24px;
+  }
+  .term-body p {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    white-space: pre;
+  }
+  .log-cmd { color: var(--teal); }
+  .log-dim { color: var(--text-muted); }
+  .log-val { color: var(--text-secondary); }
+  .log-ai { color: var(--purple); }
+
+  /* ============ Stats Band ============ */
+  .stats-band {
+    display: flex;
+    gap: 16px;
+    padding: 64px 100px;
+    background: var(--bg);
+  }
+  .stat-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .stat-value {
+    font-family: var(--font-num);
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-primary);
+  }
+  .stat-value.accent { color: var(--teal); }
+  .stat-label {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--text-secondary);
+  }
+  .stat-src {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--purple);
+    margin-top: 2px;
+  }
+
+  /* ============ Shared section styles ============ */
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 88px 100px;
+    background: var(--bg);
+  }
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--purple);
+  }
+  .section-title {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -1px;
+    width: fit-content;
+  }
+  .section-title.sm { font-size: 40px; }
+  .section-desc {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--text-secondary);
+  }
+
+  /* ============ Trends Grid ============ */
+  .trends-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .trend-card {
+    width: 400px;
+    height: auto;
+    min-height: 275px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 32px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .trend-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--teal);
+  }
+  .trend-num.red { color: var(--red); }
+  .trend-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    width: fit-content;
+  }
+  .trend-desc {
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .metric-track {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #232329;
+    overflow: hidden;
+  }
+  .metric-fill {
+    height: 4px;
+    border-radius: 2px;
+  }
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .c-teal { color: var(--teal); background: var(--teal); }
+  .c-purple { color: var(--purple); background: var(--purple); }
+  .c-cyan { color: var(--cyan); background: var(--cyan); }
+  .c-red { color: var(--red); background: var(--red); }
+
+  /* ============ Geopolitics ============ */
+  .geo-row {
+    display: flex;
+    gap: 16px;
+  }
+  .geo-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .geo-name {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+  .geo-value {
+    font-family: var(--font-num);
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-primary);
+  }
+  .geo-sub {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  .geo-track {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #232329;
+    overflow: hidden;
+  }
+  .geo-fill { height: 6px; border-radius: 3px; }
+  .geo-note {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .reg-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .reg-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .reg-header p {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .reg-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .reg-row:last-child { border-bottom: none; }
+  .reg-region { width: 120px; flex-shrink: 0; }
+  .reg-region p {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .reg-item {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  .t-teal { color: var(--teal); }
+  .t-cyan { color: var(--cyan); }
+  .t-yellow { color: var(--yellow); }
+
+  /* ============ Predictions ============ */
+  .pred-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .pill {
+    width: 88px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill-high { background: var(--teal); color: var(--bg); }
+  .pill-mid { background: var(--yellow); color: var(--bg); }
+  .pill-low { background: var(--red); color: var(--text-primary); }
+  .pred-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .pred-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .pred-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .pred-desc {
+    font-size: 13px;
+    line-height: 21px;
+    color: var(--text-secondary);
+  }
+
+  /* ============ Sources & Footer ============ */
+  .sources {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 64px 100px;
+    background: var(--bg);
+  }
+  .sources-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    width: fit-content;
+  }
+  .sources-desc {
+    font-size: 13px;
+    line-height: 22px;
+    color: var(--text-secondary);
+  }
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 28px 100px;
+    background: var(--bg);
+    border-top: 1px solid var(--divider);
+  }
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .footer-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+<div id="scale-wrap">
+  <div id="page">
+
+    <!-- ================= Hero ================= -->
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">2026 Q3 更新 · 数据截至 2026-06</span>
+        </div>
+        <h1>AI 发展趋势</h1>
+        <h2>2025 — 2026</h2>
+        <p class="hero-sub">从模型竞赛走向产业深耕。本报告以六大核心切片拆解 AI 产业的真实变化——智能体跃迁、成本崩塌、多模态融合、端侧爆发、垂直深耕与治理对齐，全部数据来自公开研究。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary">阅读完整报告</a>
+          <a class="btn btn-ghost">查看方法论</a>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="term-titlebar">
+          <span class="term-dot red"></span>
+          <span class="term-dot yellow"></span>
+          <span class="term-dot green"></span>
+          <span class="term-filename">ai_trends_2026.log</span>
+        </div>
+        <div class="term-body">
+          <p class="log-cmd">$ ai-index --fetch --year 2026</p>
+          <p class="log-dim">loading sources: HAI · McKinsey · a16z · Gartner · IDC</p>
+          <p class="log-val">enterprise adoption .............. 78%  +23pp</p>
+          <p class="log-val">inference cost (GPT-3.5 level) ... -280x</p>
+          <p class="log-val">global AI spend 2026 ............. $2.59T</p>
+          <p class="log-val">token price drift ................ -63%/yr</p>
+          <p class="log-ai">[ai] compiling 6 trend slices</p>
+          <p class="log-ai">[ai] 5 predictions ready · confidence tagged</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Stats Band ================= -->
+    <section class="stats-band">
+      <div class="stat-card">
+        <div class="stat-value">$2.59T</div>
+        <div class="stat-label">2026 全球 AI 总支出 · 同比 +47%</div>
+        <div class="stat-src">GARTNER · 2026.05</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">78%</div>
+        <div class="stat-label">企业 AI 采用率（2024）· 较 2023 +23pp</div>
+        <div class="stat-src">STANFORD HAI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">280×</div>
+        <div class="stat-label">GPT-3.5 级推理成本两年降幅</div>
+        <div class="stat-src">STANFORD HAI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">-63%</div>
+        <div class="stat-label">Token 价格年均降幅（LLMflation）</div>
+        <div class="stat-src">A16Z</div>
+      </div>
+    </section>
+
+    <!-- ================= Trends ================= -->
+    <section class="section">
+      <div class="section-head">
+        <span class="kicker">01 // CORE SLICES</span>
+        <h3 class="section-title">六大核心切片</h3>
+        <p class="section-desc">每个切片对应一条被 2025-2026 数据反复验证的产业主线。</p>
+      </div>
+      <div class="trends-grid">
+
+        <div class="trend-card">
+          <span class="trend-num">01</span>
+          <h4 class="trend-title">Agent 化跃迁</h4>
+          <p class="trend-desc">从「对话」到「执行」。智能体软件市场一年增长 139%，从 $86.4B 冲向 $206.5B，是整个 AI 市场增速最快的赛道——但 Gartner 同时警告，超过 40% 的智能体项目会在 2027 年底前被取消，概念验证与生产落地之间仍有鸿沟。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-teal" style="width: 41.4%"></div></div>
+            <span class="metric-value c-teal">Agent 软件 2026 增速 +139%</span>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <span class="trend-num">02</span>
+          <h4 class="trend-title">推理成本崩塌</h4>
+          <p class="trend-desc">达到 GPT-3.5 水平的推理成本从 2022 年 $20/M tokens 跌至 2024 年 $0.07/M，两年降幅 280 倍。叠加开源与闭源模型差距收窄至 1.7%，「智能」正在从稀缺品变成按需取用的公用资源。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-purple" style="width: 83.3%"></div></div>
+            <span class="metric-value c-purple">推理成本降幅 280× / 两年</span>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <span class="trend-num">03</span>
+          <h4 class="trend-title">多模态融合</h4>
+          <p class="trend-desc">文本、图像、音频、视频的边界在基础模型层快速溶解，全模态成为旗舰模型的标配。设计稿、架构图上的视觉理解准确率已超过 98%，多模态从「演示功能」变为「生产入口」。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-cyan" style="width: 100%"></div></div>
+            <span class="metric-value c-cyan">旗舰模型全模态覆盖率 84%</span>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <span class="trend-num">04</span>
+          <h4 class="trend-title">端侧智能爆发</h4>
+          <p class="trend-desc">小模型性能大跃迁——2022 年 MMLU 破 60 分需要 540B 参数的 PaLM，2024 年 3.8B 的 Phi-3-mini 就够了，参数缩减 142 倍。PC、手机、汽车争相塞进 NPU，推理正在从云端走向你口袋里。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-teal" style="width: 42.3%"></div></div>
+            <span class="metric-value c-teal">同级模型参数缩减 142×</span>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <span class="trend-num">05</span>
+          <h4 class="trend-title">垂直行业深耕</h4>
+          <p class="trend-desc">专用领域模型（DSLM）支出 2026 年增长 210%，是所有细分赛道里最快的——企业不再迷恋「万能大模型」，而是转向读得懂病历、看得懂保单、接得住工单的小而准的模型。医疗 AI 设备审批数六年间增长 37 倍。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-purple" style="width: 100%"></div></div>
+            <span class="metric-value c-purple">DSLM 支出增速 +210%</span>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <span class="trend-num red">06</span>
+          <h4 class="trend-title">治理与对齐</h4>
+          <p class="trend-desc">AI 事件数在 2024 年创下 233 起的历史新高，同比 +56.4%。美国各州层面新通过 59 项 AI 监管，翻了一倍。企业普遍「认知风险但不行动」——66% 意识到网络安全风险，仅 55% 采取缓解措施，对齐成为产业刚需。</p>
+          <div class="metric">
+            <div class="metric-track"><div class="metric-fill c-red" style="width: 59.5%"></div></div>
+            <span class="metric-value c-red">AI 事件 233 起 / 年 · +56.4%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= Geopolitics ================= -->
+    <section class="section">
+      <div class="section-head">
+        <span class="kicker">02 // GEOPOLITICS</span>
+        <h3 class="section-title sm">中美欧三极格局</h3>
+        <p class="section-desc">美国以投资规模与模型数量领跑，中国以最快速度收窄性能差距并在论文与专利上保持第一，欧洲则以监管定义另一条赛道。</p>
+      </div>
+      <div class="geo-row">
+        <div class="geo-card">
+          <span class="geo-name">美国 UNITED STATES</span>
+          <div class="geo-value">$109.1B</div>
+          <p class="geo-sub">2024 私人 AI 投资 · 40 个知名模型 · 基准测试领先</p>
+          <div class="geo-track"><div class="geo-fill c-teal" style="width: 97%"></div></div>
+        </div>
+        <div class="geo-card">
+          <span class="geo-name">中国 CHINA</span>
+          <div class="geo-value">$9.3B</div>
+          <p class="geo-sub">15 个知名模型 · 性能差距收窄至近乎持平 · 论文与专利全球第一</p>
+          <div class="geo-track"><div class="geo-fill c-red" style="width: 36.3%"></div></div>
+        </div>
+        <div class="geo-card">
+          <span class="geo-name">欧盟 EUROPE</span>
+          <div class="geo-value">3</div>
+          <p class="geo-sub">3 个知名模型（2024）·《AI Act》为全球首个全面 AI 法案，2026 年全面适用</p>
+          <div class="geo-track"><div class="geo-fill c-cyan" style="width: 7.2%"></div></div>
+        </div>
+      </div>
+      <p class="geo-note">* 条形对比口径：2024 年各国机构产出的知名 AI 模型数量（Stanford HAI AI Index 2025）</p>
+      <div class="reg-box">
+        <div class="reg-header"><p>监管动态 / 2025-2026</p></div>
+        <div class="reg-row">
+          <div class="reg-region"><p class="t-teal">美国 · 州级</p></div>
+          <p class="reg-item">2024 年新通过 59 项 AI 相关监管，较上一年翻倍，州级立法领跑联邦</p>
+        </div>
+        <div class="reg-row">
+          <div class="reg-region"><p class="t-cyan">欧盟</p></div>
+          <p class="reg-item">《AI Act》按风险分级落地，通用模型义务与高风险系统要求分阶段生效</p>
+        </div>
+        <div class="reg-row">
+          <div class="reg-region"><p class="t-yellow">全球</p></div>
+          <p class="reg-item">立法机构 AI 提及量增长 21%+；企业层面责任 AI 落地仍不一致，安全评估依然稀缺</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Predictions ================= -->
+    <section class="section">
+      <div class="section-head">
+        <span class="kicker">03 // FORECAST</span>
+        <h3 class="section-title sm">2026 五条关键预测</h3>
+        <p class="section-desc">每条预测均标注信度等级——高信度有强数据支撑，中信度依赖趋势外推，低信度属于方向性判断。</p>
+      </div>
+
+      <div class="pred-card">
+        <span class="pill pill-high">高信度</span>
+        <span class="pred-num">01</span>
+        <div class="pred-body">
+          <p class="pred-title">推理成本再降一个数量级，智能按需取用</p>
+          <p class="pred-desc">280 倍降幅与年均 -63% 的 token 价格曲线没有出现拐点，2026 年一线模型能力将以约 1/10 价格平价供给，毛利率压力倒逼商业模式转向用量变现。</p>
+        </div>
+      </div>
+
+      <div class="pred-card">
+        <span class="pill pill-high">高信度</span>
+        <span class="pred-num">02</span>
+        <div class="pred-body">
+          <p class="pred-title">智能体从助手进入核心业务流程编排</p>
+          <p class="pred-desc">Agent 软件支出一年 +139%，同时超过 60% 的头部企业已将生成式 AI 接入核心流程——2026 年的竞争点从「会聊天」转向「接系统、扛流程、可审计」。</p>
+        </div>
+      </div>
+
+      <div class="pred-card">
+        <span class="pill pill-mid">中信度</span>
+        <span class="pred-num">03</span>
+        <div class="pred-body">
+          <p class="pred-title">端侧推理成为旗舰设备出厂标配</p>
+          <p class="pred-desc">142 倍的参数效率跃迁让 3-4B 模型跑进手机与 PC，端云混合推理从卖点变成基线；但杀手级端侧应用的出现节奏仍不确定。</p>
+        </div>
+      </div>
+
+      <div class="pred-card">
+        <span class="pill pill-mid">中信度</span>
+        <span class="pred-num">04</span>
+        <div class="pred-body">
+          <p class="pred-title">垂直模型支出增速持续跑赢通用大模型</p>
+          <p class="pred-desc">DSLM +210% 对基础模型 +104%，企业预算向「小而准、可私有化、可审计」倾斜，ROI 审查成为采购第一原则。</p>
+        </div>
+      </div>
+
+      <div class="pred-card">
+        <span class="pill pill-low">低信度</span>
+        <span class="pred-num">05</span>
+        <div class="pred-body">
+          <p class="pred-title">全球 AI 治理框架出现实质协同</p>
+          <p class="pred-desc">三极监管竞速、事件数创新高，跨区域标准互认在 2026 年内达成仍属小概率事件；更可能的现实是合规成本本身成为出海门槛。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Sources ================= -->
+    <section class="sources">
+      <span class="kicker">04 // METHODOLOGY</span>
+      <h3 class="sources-title">数据来源</h3>
+      <p class="sources-desc">Stanford HAI《AI Index Report 2025》 · Gartner 全球 AI 支出预测（2026.05） · IDC 企业 AI 支出与基础设施预测 · a16z「LLMflation」Token 价格研究 · McKinsey《State of AI》调研。口径说明：Gartner 的 $2.59T 为全栈采购支出预测，Stanford 的 $252.3B 为 2024 年实际私人投资，两者不可直接相加。</p>
+    </section>
+
+    <!-- ================= Footer ================= -->
+    <footer class="footer">
+      <span class="footer-brand">AI TRENDS REPORT</span>
+      <span class="footer-meta">2026 · 数据截至 2026-06 · 引用请注明原始来源</span>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  // Proportional scaling: preserve the original 1440px design canvas,
+  // scale the whole page uniformly to fit the viewport width.
+  (function () {
+    var DESIGN_W = 1440;
+    var page = document.getElementById('page');
+    var wrap = document.getElementById('scale-wrap');
+    function rescale() {
+      var s = window.innerWidth / DESIGN_W;
+      page.style.transform = 'scale(' + s + ')';
+      wrap.style.height = (page.offsetHeight * s) + 'px';
+    }
+    window.addEventListener('resize', rescale);
+    window.addEventListener('load', rescale);
+    rescale();
+  })();
+</script>
+</body>
+</html>
