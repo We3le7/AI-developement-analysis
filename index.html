@@ -37,7 +37,9 @@
   }
 
   /* ============ Fixed 1440 canvas + proportional scaling ============ */
-  #scale-wrap { overflow: hidden; width: 100%; }
+  html { scroll-behavior: smooth; }
+  /* overflow: clip keeps sticky nav working inside the scaled wrapper */
+  #scale-wrap { overflow: clip; width: 100%; }
   #page {
     width: 1440px;
     background: var(--bg);
@@ -45,6 +47,38 @@
     display: flex;
     flex-direction: column;
   }
+
+  /* ============ Top Nav (sticky) ============ */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 100px;
+    background: rgba(5, 0, 16, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--divider);
+  }
+  .nav-brand {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-links a.active { color: var(--teal); }
+  section[id] { scroll-margin-top: 72px; }
 
   /* ============ Hero ============ */
   .hero {
@@ -477,8 +511,20 @@
 <div id="scale-wrap">
   <div id="page">
 
+    <!-- ================= Top Nav ================= -->
+    <nav class="topnav" aria-label="页面导航">
+      <a class="nav-brand" href="#top">AI TRENDS REPORT</a>
+      <div class="nav-links">
+        <a href="#data" data-nav="data">关键数据</a>
+        <a href="#trends" data-nav="trends">核心切片</a>
+        <a href="#geo" data-nav="geo">三极格局</a>
+        <a href="#forecast" data-nav="forecast">2026 预测</a>
+        <a href="#methodology" data-nav="methodology">数据来源</a>
+      </div>
+    </nav>
+
     <!-- ================= Hero ================= -->
-    <section class="hero">
+    <section class="hero" id="top">
       <div class="hero-copy">
         <div class="badge">
           <span class="badge-dot"></span>
@@ -488,8 +534,8 @@
         <h2>2025 — 2026</h2>
         <p class="hero-sub">从模型竞赛走向产业深耕。本报告以六大核心切片拆解 AI 产业的真实变化——智能体跃迁、成本崩塌、多模态融合、端侧爆发、垂直深耕与治理对齐，全部数据来自公开研究。</p>
         <div class="cta-row">
-          <a class="btn btn-primary">阅读完整报告</a>
-          <a class="btn btn-ghost">查看方法论</a>
+          <a class="btn btn-primary" href="#trends">阅读完整报告</a>
+          <a class="btn btn-ghost" href="#methodology">查看方法论</a>
         </div>
       </div>
       <div class="terminal">
@@ -513,7 +559,7 @@
     </section>
 
     <!-- ================= Stats Band ================= -->
-    <section class="stats-band">
+    <section class="stats-band" id="data">
       <div class="stat-card">
         <div class="stat-value">$2.59T</div>
         <div class="stat-label">2026 全球 AI 总支出 · 同比 +47%</div>
@@ -537,7 +583,7 @@
     </section>
 
     <!-- ================= Trends ================= -->
-    <section class="section">
+    <section class="section" id="trends">
       <div class="section-head">
         <span class="kicker">01 // CORE SLICES</span>
         <h3 class="section-title">六大核心切片</h3>
@@ -609,7 +655,7 @@
     </section>
 
     <!-- ================= Geopolitics ================= -->
-    <section class="section">
+    <section class="section" id="geo">
       <div class="section-head">
         <span class="kicker">02 // GEOPOLITICS</span>
         <h3 class="section-title sm">中美欧三极格局</h3>
@@ -654,7 +700,7 @@
     </section>
 
     <!-- ================= Predictions ================= -->
-    <section class="section">
+    <section class="section" id="forecast">
       <div class="section-head">
         <span class="kicker">03 // FORECAST</span>
         <h3 class="section-title sm">2026 五条关键预测</h3>
@@ -708,7 +754,7 @@
     </section>
 
     <!-- ================= Sources ================= -->
-    <section class="sources">
+    <section class="sources" id="methodology">
       <span class="kicker">04 // METHODOLOGY</span>
       <h3 class="sources-title">数据来源</h3>
       <p class="sources-desc">Stanford HAI《AI Index Report 2025》 · Gartner 全球 AI 支出预测（2026.05） · IDC 企业 AI 支出与基础设施预测 · a16z「LLMflation」Token 价格研究 · McKinsey《State of AI》调研。口径说明：Gartner 的 $2.59T 为全栈采购支出预测，Stanford 的 $252.3B 为 2024 年实际私人投资，两者不可直接相加。</p>
@@ -738,6 +784,35 @@
     window.addEventListener('resize', rescale);
     window.addEventListener('load', rescale);
     rescale();
+  })();
+
+  // Scroll-spy: highlight the nav link of the section currently in view.
+  (function () {
+    var links = document.querySelectorAll('.nav-links a[data-nav]');
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('data-nav')] = a; });
+    var sections = ['data', 'trends', 'geo', 'forecast', 'methodology']
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    function setActive(id) {
+      links.forEach(function (a) { a.classList.remove('active'); });
+      if (id && map[id]) map[id].classList.add('active');
+    }
+    // The page is transform-scaled; getBoundingClientRect still reports
+    // scaled viewport positions, which is what IntersectionObserver needs.
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(function (sec) { io.observe(sec); });
+    var hero = document.getElementById('top');
+    if (hero) {
+      var heroIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) setActive(null); });
+      }, { rootMargin: '0px 0px -80% 0px' });
+      heroIO.observe(hero);
+    }
   })();
 </script>
 </body>
