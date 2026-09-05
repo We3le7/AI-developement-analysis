@@ -49,20 +49,28 @@
     flex-direction: column;
   }
 
-  /* ============ Top Nav (sticky) ============ */
+  /* ============ Top Nav (fixed — outside the scaled wrapper) ============ */
   .topnav {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    padding: 0 100px;
-    background: rgba(5, 0, 16, 0.82);
+    padding: 0 40px;
+    background: rgba(5, 0, 16, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--divider);
+  }
+  .topnav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
   }
   .nav-brand {
     font-family: var(--font-mono);
@@ -79,7 +87,8 @@
   }
   .nav-links a:hover { color: var(--text-primary); }
   .nav-links a.active { color: var(--teal); }
-  section[id] { scroll-margin-top: 72px; }
+  section[id] { scroll-margin-top: 76px; }
+  #scale-wrap { padding-top: 60px; }  /* clear the fixed nav */
 
   /* ============ Hero ============ */
   .hero {
@@ -565,22 +574,25 @@
 </style>
 </head>
 <body>
+
+<!-- ================= Top Nav (fixed) ================= -->
+<nav class="topnav" aria-label="页面导航">
+  <div class="topnav-inner">
+    <a class="nav-brand" href="#top">AI TRENDS REPORT</a>
+    <div class="nav-links">
+      <a href="#data" data-nav="data">关键数据</a>
+      <a href="#trends" data-nav="trends">核心切片</a>
+      <a href="#cost" data-nav="cost">成本算力</a>
+      <a href="#industry" data-nav="industry">产业应用</a>
+      <a href="#geo" data-nav="geo">三极格局</a>
+      <a href="#forecast" data-nav="forecast">2026 预测</a>
+      <a href="#methodology" data-nav="methodology">数据来源</a>
+    </div>
+  </div>
+</nav>
+
 <div id="scale-wrap">
   <div id="page">
-
-    <!-- ================= Top Nav ================= -->
-    <nav class="topnav" aria-label="页面导航">
-      <a class="nav-brand" href="#top">AI TRENDS REPORT</a>
-      <div class="nav-links">
-        <a href="#data" data-nav="data">关键数据</a>
-        <a href="#trends" data-nav="trends">核心切片</a>
-        <a href="#cost" data-nav="cost">成本算力</a>
-        <a href="#industry" data-nav="industry">产业应用</a>
-        <a href="#geo" data-nav="geo">三极格局</a>
-        <a href="#forecast" data-nav="forecast">2026 预测</a>
-        <a href="#methodology" data-nav="methodology">数据来源</a>
-      </div>
-    </nav>
 
     <!-- ================= Hero ================= -->
     <section class="hero" id="top">
