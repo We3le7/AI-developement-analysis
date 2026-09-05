@@ -38,8 +38,9 @@
 
   /* ============ Fixed 1440 canvas + proportional scaling ============ */
   html { scroll-behavior: smooth; }
-  /* overflow: clip keeps sticky nav working inside the scaled wrapper */
-  #scale-wrap { overflow: clip; width: 100%; }
+  body { overflow-x: hidden; }
+  /* overflow must stay visible on ancestors for position:sticky to work */
+  #scale-wrap { overflow: visible; width: 100%; }
   #page {
     width: 1440px;
     background: var(--bg);
@@ -69,7 +70,7 @@
     color: var(--text-primary);
     text-decoration: none;
   }
-  .nav-links { display: flex; gap: 28px; }
+  .nav-links { display: flex; gap: 22px; }
   .nav-links a {
     font-size: 13px;
     color: var(--text-secondary);
@@ -336,6 +337,62 @@
   .c-cyan { color: var(--cyan); background: var(--cyan); }
   .c-red { color: var(--red); background: var(--red); }
 
+  /* ============ Cost & Compute ============ */
+  .cost-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+  .cost-tile {
+    flex: 1; min-width: 590px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 24px 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .cost-kicker { font-family: var(--font-mono); font-size: 11px; color: var(--purple); }
+  .cost-value {
+    font-family: var(--font-num); font-size: 32px; font-weight: 700;
+    letter-spacing: -1px; color: var(--text-primary);
+  }
+  .cost-label { font-size: 13px; line-height: 20px; color: var(--text-secondary); }
+  .cost-src { font-family: var(--font-mono); font-size: 11px; color: var(--purple); margin-top: 2px; }
+
+  /* ============ Industry ============ */
+  .industry-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+  .industry-card {
+    flex: 1; min-width: 400px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .industry-value {
+    font-family: var(--font-num); font-size: 34px; font-weight: 700;
+    letter-spacing: -1px; color: var(--teal);
+  }
+  .industry-label { font-size: 13px; line-height: 20px; color: var(--text-secondary); flex: 1; }
+  .industry-src { font-family: var(--font-mono); font-size: 11px; color: var(--purple); }
+
+  /* ============ Strategy & Sentiment ============ */
+  .strategy-row { display: flex; gap: 16px; }
+  .strategy-card {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .strategy-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .strategy-line { font-size: 13px; line-height: 22px; color: var(--text-secondary); }
+  .strategy-line strong { color: var(--text-primary); font-weight: 600; }
+  .sent-row { display: flex; align-items: center; gap: 12px; }
+  .sent-label { width: 72px; font-size: 12px; color: var(--text-secondary); flex-shrink: 0; }
+  .sent-track { flex: 1; height: 4px; border-radius: 2px; background: #232329; overflow: hidden; }
+  .sent-fill { height: 4px; border-radius: 2px; background: var(--teal); }
+  .sent-val { font-family: var(--font-mono); font-size: 12px; color: var(--teal); width: 40px; text-align: right; flex-shrink: 0; }
+  .t-purple { color: var(--purple); }
+  .stat-value.red { color: var(--red); }
+
   /* ============ Geopolitics ============ */
   .geo-row {
     display: flex;
@@ -517,6 +574,8 @@
       <div class="nav-links">
         <a href="#data" data-nav="data">关键数据</a>
         <a href="#trends" data-nav="trends">核心切片</a>
+        <a href="#cost" data-nav="cost">成本算力</a>
+        <a href="#industry" data-nav="industry">产业应用</a>
         <a href="#geo" data-nav="geo">三极格局</a>
         <a href="#forecast" data-nav="forecast">2026 预测</a>
         <a href="#methodology" data-nav="methodology">数据来源</a>
@@ -579,6 +638,16 @@
         <div class="stat-value accent">-63%</div>
         <div class="stat-label">Token 价格年均降幅（LLMflation）</div>
         <div class="stat-src">A16Z</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$581B</div>
+        <div class="stat-label">2025 全球企业 AI 投资 · 同比 +130%</div>
+        <div class="stat-src">STANFORD HAI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">233</div>
+        <div class="stat-label">2024 年 AI 安全事件数 · 同比 +56.4% 创新高</div>
+        <div class="stat-src">STANFORD HAI</div>
       </div>
     </section>
 
@@ -654,10 +723,92 @@
       </div>
     </section>
 
+
+    <!-- ================= Cost & Compute ================= -->
+    <section class="section" id="cost">
+      <div class="section-head">
+        <span class="kicker">02 // COST &amp; COMPUTE</span>
+        <h3 class="section-title sm">成本与算力经济学</h3>
+        <p class="section-desc">智能的价格正在以摩尔定律从未有过的速度崩塌——这决定了谁能用得起 AI，也决定了商业模式必须怎么变。</p>
+      </div>
+      <div class="cost-grid">
+        <div class="cost-tile">
+          <span class="cost-kicker">INFERENCE COST / GPT-3.5 LEVEL</span>
+          <div class="cost-value">$20.00 → $0.07 / M tokens</div>
+          <p class="cost-label">2022.11 至 2024.10，18 个月内下降 280 倍。同等智力水平的单价趋近于零，按 token 计费的商业模式承压，厂商转向用量分层与订阅捆绑。</p>
+          <span class="cost-src">STANFORD HAI AI INDEX 2025</span>
+        </div>
+        <div class="cost-tile">
+          <span class="cost-kicker">HARDWARE ECONOMICS</span>
+          <div class="cost-value">成本 -30% / 年 · 能效 +40% / 年</div>
+          <p class="cost-label">硬件层面，AI 算力成本每年下降约 30%，能源效率每年提升约 40%。训练算力每 5 个月翻倍、数据集每 8 个月翻倍，供给侧的扩张仍在指数区间。</p>
+          <span class="cost-src">STANFORD HAI AI INDEX 2025</span>
+        </div>
+        <div class="cost-tile">
+          <span class="cost-kicker">OPEN vs CLOSED</span>
+          <div class="cost-value">8.0% → 1.7%</div>
+          <p class="cost-label">顶尖开源与闭源模型的竞技场差距从 2024.01 的 8.0% 收窄至 2025.02 的 1.7%，几乎抹平。开源权重正在成为企业压价与私有化部署的默认选项。</p>
+          <span class="cost-src">STANFORD HAI AI INDEX 2025</span>
+        </div>
+        <div class="cost-tile">
+          <span class="cost-kicker">PARAMETER EFFICIENCY</span>
+          <div class="cost-value">540B → 3.8B（-142×）</div>
+          <p class="cost-label">MMLU 破 60 分所需参数量两年缩水 142 倍。小模型把推理搬进手机、PC 与汽车，也把「够用的智能」的价格打到长尾市场可以承受的位置。</p>
+          <span class="cost-src">STANFORD HAI AI INDEX 2025</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= Industry ================= -->
+    <section class="section" id="industry">
+      <div class="section-head">
+        <span class="kicker">03 // INDUSTRY VALUE</span>
+        <h3 class="section-title sm">产业应用与价值兑现</h3>
+        <p class="section-desc">采用率已经不是问题，价值兑现才是。不同业务职能的回报差异巨大——钱正在流向能算清 ROI 的地方。</p>
+      </div>
+      <div class="industry-grid">
+        <div class="industry-card">
+          <div class="industry-value">70%</div>
+          <p class="industry-label">将生成式 AI 用于战略与企业财务职能的组织中报告了收入增长——是所有职能中兑现率最高的场景。</p>
+          <span class="industry-src">STANFORD HAI</span>
+        </div>
+        <div class="industry-card">
+          <div class="industry-value">61%</div>
+          <p class="industry-label">在供应链与库存管理中使用生成式 AI 的组织报告了成本节约——成本侧回报最集中的职能。</p>
+          <span class="industry-src">STANFORD HAI</span>
+        </div>
+        <div class="industry-card">
+          <div class="industry-value">+34%</div>
+          <p class="industry-label">客服场景中低技能员工借助 AI 获得的生产率提升，显著高于高技能员工——AI 正在抹平技能差距而非拉大它。</p>
+          <span class="industry-src">STANFORD HAI</span>
+        </div>
+        <div class="industry-card">
+          <div class="industry-value">223 款</div>
+          <p class="industry-label">FDA 批准的 AI 医疗设备累计数量（2023，1995 年首例）：从 2015 年的 6 款到如今爆发式增长，医疗是垂直落地最深的行业。</p>
+          <span class="industry-src">STANFORD HAI</span>
+        </div>
+      </div>
+      <div class="strategy-row">
+        <div class="strategy-card">
+          <p class="strategy-title">ROI 审查成为第一原则</p>
+          <p class="strategy-line">企业 AI 预算正面临更严格的稽核：采购决策从「追新」转向<strong>成本、延迟、性能与可靠性</strong>四个可量化维度，按使用量付费成为主流，无法证明持续使用的供应商将被替换。</p>
+        </div>
+        <div class="strategy-card">
+          <p class="strategy-title">价值鸿沟依然显著</p>
+          <p class="strategy-line">78% 的组织在用 AI，但<strong>仅约一半</strong>在战略与财务职能中观察到 5% 以内的收入改善。采用与兑现之间的差距，是 2026 年企业 AI 的主战场。</p>
+        </div>
+        <div class="strategy-card">
+          <p class="strategy-title">端侧渗透加速</p>
+          <p class="strategy-line">小模型能力跃迁推动 NPU 成为 PC / 手机 / 汽车出厂标配，<strong>端云混合推理</strong>从卖点变基线；杀手级端侧应用的出现节奏，是下一个不确定变量。</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= Geopolitics ================= -->
     <section class="section" id="geo">
       <div class="section-head">
-        <span class="kicker">02 // GEOPOLITICS</span>
+        <span class="kicker">04 // GEOPOLITICS</span>
         <h3 class="section-title sm">中美欧三极格局</h3>
         <p class="section-desc">美国以投资规模与模型数量领跑，中国以最快速度收窄性能差距并在论文与专利上保持第一，欧洲则以监管定义另一条赛道。</p>
       </div>
@@ -697,12 +848,27 @@
           <p class="reg-item">立法机构 AI 提及量增长 21%+；企业层面责任 AI 落地仍不一致，安全评估依然稀缺</p>
         </div>
       </div>
+      <div class="strategy-row">
+        <div class="strategy-card">
+          <p class="strategy-title">国家战略竞速</p>
+          <p class="strategy-line">各国以国家级资金加码：<strong>中国设立 475 亿美元芯片基金</strong>，加拿大承诺 24 亿美元，沙特宣布千亿美元级 AI 计划。AI 已从企业竞争升级为国家竞争。</p>
+        </div>
+        <div class="strategy-card">
+          <p class="strategy-title">美国监管重心下移</p>
+          <p class="strategy-line">联邦层面进展缓慢，<strong>2024 年各州新通过 59 项 AI 监管、翻倍增长</strong>——州级立法成为美国 AI 治理的事实主场，合规版图碎片化。</p>
+        </div>
+        <div class="strategy-card">
+          <p class="strategy-title">公众情绪的巨大温差</p>
+          <p class="strategy-line">认为 AI 利大于弊的比例：<strong>中国 83%</strong>（全球最乐观）vs 美国 39%。欧美乐观度也在升温（法德英 2022 年以来 +8~10pp），但信任鸿沟仍在。</p>
+        </div>
+      </div>
+      <p class="geo-note">* 公众情绪数据：Stanford HAI AI Index 2025（2024 年全球调查）</p>
     </section>
 
     <!-- ================= Predictions ================= -->
     <section class="section" id="forecast">
       <div class="section-head">
-        <span class="kicker">03 // FORECAST</span>
+        <span class="kicker">05 // FORECAST</span>
         <h3 class="section-title sm">2026 五条关键预测</h3>
         <p class="section-desc">每条预测均标注信度等级——高信度有强数据支撑，中信度依赖趋势外推，低信度属于方向性判断。</p>
       </div>
@@ -712,7 +878,7 @@
         <span class="pred-num">01</span>
         <div class="pred-body">
           <p class="pred-title">推理成本再降一个数量级，智能按需取用</p>
-          <p class="pred-desc">280 倍降幅与年均 -63% 的 token 价格曲线没有出现拐点，2026 年一线模型能力将以约 1/10 价格平价供给，毛利率压力倒逼商业模式转向用量变现。</p>
+          <p class="pred-desc">280 倍降幅与年均 -63% 的 token 价格曲线没有出现拐点，2026 年一线模型能力将以约 1/10 价格平价供给，毛利率压力倒逼商业模式转向用量变现。<strong>依据：</strong>HAI 实测 18 个月内 -280×；a16z LLMflation 年均 -63%；Gartner 2026 预测模型层支出 +117%，量增价跌格局确立。</p>
         </div>
       </div>
 
@@ -721,7 +887,7 @@
         <span class="pred-num">02</span>
         <div class="pred-body">
           <p class="pred-title">智能体从助手进入核心业务流程编排</p>
-          <p class="pred-desc">Agent 软件支出一年 +139%，同时超过 60% 的头部企业已将生成式 AI 接入核心流程——2026 年的竞争点从「会聊天」转向「接系统、扛流程、可审计」。</p>
+          <p class="pred-desc">Agent 软件支出一年 +139%，同时超过 60% 的头部企业已将生成式 AI 接入核心流程——2026 年的竞争点从「会聊天」转向「接系统、扛流程、可审计」。<strong>依据：</strong>Gartner Agent 软件 $86.4B→$206.5B；IDC 超过 60% 中国头部企业已整合生成式 AI 到核心流程；但 40% 项目取消率提示分化。</p>
         </div>
       </div>
 
@@ -730,7 +896,7 @@
         <span class="pred-num">03</span>
         <div class="pred-body">
           <p class="pred-title">端侧推理成为旗舰设备出厂标配</p>
-          <p class="pred-desc">142 倍的参数效率跃迁让 3-4B 模型跑进手机与 PC，端云混合推理从卖点变成基线；但杀手级端侧应用的出现节奏仍不确定。</p>
+          <p class="pred-desc">142 倍的参数效率跃迁让 3-4B 模型跑进手机与 PC，端云混合推理从卖点变成基线；但杀手级端侧应用的出现节奏仍不确定。<strong>依据：</strong>HAI 参数效率 -142×、硬件能效 +40%/年支撑端侧算力；IDC 判断 AI 超周期进入端侧与应用阶段；应用爆发时点存在分歧。</p>
         </div>
       </div>
 
@@ -739,7 +905,7 @@
         <span class="pred-num">04</span>
         <div class="pred-body">
           <p class="pred-title">垂直模型支出增速持续跑赢通用大模型</p>
-          <p class="pred-desc">DSLM +210% 对基础模型 +104%，企业预算向「小而准、可私有化、可审计」倾斜，ROI 审查成为采购第一原则。</p>
+          <p class="pred-desc">DSLM +210% 对基础模型 +104%，企业预算向「小而准、可私有化、可审计」倾斜，ROI 审查成为采购第一原则。<strong>依据：</strong>Gartner 2026 模型与平台支出预测中 DSLM 增速第一（$15.8亿→$49.1亿）；医疗等强合规行业倾向数据不出域的私有化部署。</p>
         </div>
       </div>
 
@@ -748,16 +914,16 @@
         <span class="pred-num">05</span>
         <div class="pred-body">
           <p class="pred-title">全球 AI 治理框架出现实质协同</p>
-          <p class="pred-desc">三极监管竞速、事件数创新高，跨区域标准互认在 2026 年内达成仍属小概率事件；更可能的现实是合规成本本身成为出海门槛。</p>
+          <p class="pred-desc">三极监管竞速、事件数创新高，跨区域标准互认在 2026 年内达成仍属小概率事件；更可能的现实是合规成本本身成为出海门槛。<strong>依据：</strong>美国州级 59 项碎片化立法、欧盟 AI Act 分阶段生效、全球立法提及 +21% 但方向不一；AI 事件 +56.4% 推高监管紧迫性，然互认机制尚无时间表。</p>
         </div>
       </div>
     </section>
 
     <!-- ================= Sources ================= -->
     <section class="sources" id="methodology">
-      <span class="kicker">04 // METHODOLOGY</span>
+      <span class="kicker">06 // METHODOLOGY</span>
       <h3 class="sources-title">数据来源</h3>
-      <p class="sources-desc">Stanford HAI《AI Index Report 2025》 · Gartner 全球 AI 支出预测（2026.05） · IDC 企业 AI 支出与基础设施预测 · a16z「LLMflation」Token 价格研究 · McKinsey《State of AI》调研。口径说明：Gartner 的 $2.59T 为全栈采购支出预测，Stanford 的 $252.3B 为 2024 年实际私人投资，两者不可直接相加。</p>
+      <p class="sources-desc">Stanford HAI《AI Index Report 2025》 · Gartner 全球 AI 支出预测（2026.05） · IDC 企业 AI 支出与基础设施预测 · a16z「LLMflation」Token 价格研究 · McKinsey《State of AI》调研。口径说明：Gartner 的 $2.59T 为 2026 全栈采购支出预测（模型与平台层 $64.25B 为其中一小部分），Stanford HAI 的 $252.3B（2024）/ $581B（2025）为企业实际投资，IDC 的 $940B（2026）为企业 AI 支出口径——三者口径不同，不可直接相加或对比。</p>
     </section>
 
     <!-- ================= Footer ================= -->
@@ -791,7 +957,7 @@
     var links = document.querySelectorAll('.nav-links a[data-nav]');
     var map = {};
     links.forEach(function (a) { map[a.getAttribute('data-nav')] = a; });
-    var sections = ['data', 'trends', 'geo', 'forecast', 'methodology']
+    var sections = ['data', 'trends', 'cost', 'industry', 'geo', 'forecast', 'methodology']
       .map(function (id) { return document.getElementById(id); })
       .filter(Boolean);
     function setActive(id) {
